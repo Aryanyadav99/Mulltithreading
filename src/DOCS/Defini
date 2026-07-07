@@ -1,0 +1,27 @@
+Defitnitions
+
+
+Core – CPU ke andar ek independent processing unit. Purane time mein CPU mein sirf ek core hota tha (single core), matlab ek time pe ek hi kaam(process) ho pata tha .
+Multicore – Jab ek CPU chip ke andar do ya zyada cores hote hai (dual-core, quad-core, octa-core). Har core apna kaam independently kar sakta hai, matlab true parallel execution possible hai. Tera phone/laptop aaj kal multicore hi hota hai.
+Program – Ek passive cheez hai — code jo disk pe pada hai (.exe, .class file, etc). Jab tak run nahi ho raha, ye sirf instructions ka set hai, kuch execute nahi ho raha.
+Process – Jab program run hota hai, wo process ban jata hai.Move to main memory. Process ek active entity hai jiska apna memory space hota hai (isolated from other processes). Ek program ka ek se zyada process bhi ban sakta hai (jaise Chrome ke multiple tabs alag processes hote hai).
+Thread – Process ke andar ek smallest unit of execution. Ek process mein minimum ek thread to hota hi hai (main thread). Threads ek hi process ke andar memory share karte hai — ye important hai, isko yaad rakh.
+Multithreading – Jab ek single process ke andar multiple threads simultaneously (ya concurrently) chal rahe ho, aur wo sab process ka shared memory use karte hai.
+
+Memory – Do type samajh:
+
+Process level pe har process ko apna separate memory space milta hai (heap, stacks alag).Stacks kyoki ek process me multi thread ho sakte hai and every thread has it own stack .. so technically process didnt have any stack the thread insider the process has its own stack.
+Thread level pe — har thread ka apna stack hota hai (local variables ke liye), lekin heap memory sab threads share karte hai same process ke andar. Isi wajah se multithreading mein race conditions jaisi problems aati hai, kyunki shared data pe multiple threads ek saath access/modify kar sakte hai.
+
+Multitasking (OS Concept)
+OS ka feature hai jo ek time pe bahut saare applications/tasks chalata hai (Chrome, VS Code, Spotify, WhatsApp sab together). Single-core pe fast context switching se hota hai, multicore pe kuch tasks truly parallel bhi chal sakte hai.
+
+Multiprocessing
+Multiple processes execute hote hai, har process ka apna alag Heap, Stack, Memory hota hai. Ek process crash ho jaye to doosra generally chalta rehta hai (isolated hone ki wajah se). Example: Chrome ke multiple processes (Process 1, Process 2, Process 3).
+Alag memory, safe
+Communication costly (IPC use karna padta hai)
+
+Multithreading
+Sirf ek process hota hai, uske andar multiple threads (Main Thread, Worker Thread, DB Thread, Logger Thread). Ye sab Heap, Objects, Static variables share karte hai, lekin har thread ka apna Stack hota hai. Isi sharing ki wajah se race condition hoti hai.
+ Same memory share, fast communication
+ Synchronization aur race condition ka risk

@@ -1,0 +1,48 @@
+Java Support multithreading by default no need to install any library. Java ke andar Thread class aur Runnable interface hai jo multithreading support karte hai. Thread class ke andar run() method hota hai jisme thread ka kaam define hota hai. Runnable interface ke andar bhi run() method hota hai, aur isko implement karke thread create kiya ja sakta hai.
+
+JVM multithreading ko possible banata hai in tarikon se :
+Thread creation aur mapping: Jab tu Java mein new Thread() banata hai aur .start() call karta hai, JVM internally us Java thread ko ek native OS thread se map karta hai.
+Memory management per thread: JVM har thread ko apna separate JVM Stack deta hai. Lekin Heap saare threads ke beech shared hota hai same process (JVM instance) ke andar.
+Thread Scheduler: JVM khud threads ko schedule nahi karta — ye kaam underlying OS ka thread scheduler karta hai. JVM sirf request karta hai ki thread ko ready state mein daal do, actual CPU time allotment OS decide karta hai (priority, time-slicing, etc. ke basis pe). Isliye Java mein thread priority sirf ek "hint" hoti hai, guarantee nahi.
+Garbage Collection aur Thread Safety: JVM ke garbage collector ko bhi multithreading ka dhyan rakhna padta hai. Agar multiple threads ek hi object ko access kar rahe hai, to JVM ensure karta hai ki GC thread-safe ho, taaki memory corruption na ho.
+Thread lifeCycle management: JVM thread lifecycle ko manage karta hai (New, Runnable, Running, Waiting, Timed Waiting, Terminated). JVM internally OS ke thread states ke saath map karta hai.
+
+timeslicing and context switching in single core
+
+Default Thread is Main Thread. Jab tu Java program run karta hai, JVM automatically ek main thread create karta hai jo main() method ko execute karta hai. Agar tu new threads create karta hai, to wo main thread ke alawa execute honge.
+
+Ways to Create a New Thread in Java
+
+1. Extending Thread class
+Apni class ko java.lang.Thread class se extend karke run() method override karte hai. Object banane ke baad .start() call karte hai jo naya thread create karke run() ko execute karta hai.
+Limitation: Java single inheritance support karta hai, to agar Thread extend kar liya to koi aur class extend nahi kar sakte.
+2. Implementing Runnable interface
+Runnable interface implement karke run() method define karte hai. Fir uska object Thread class ke constructor mein pass karke .start() call karte hai.
+✔ Preferred way — kyunki interface implement karne se doosri class bhi extend kar sakte hai (inheritance flexibility milti hai).
+✔ Better design — task (Runnable) aur thread (Thread) ko separate karta hai, "separation of concerns" follow hota hai.
+3. Implementing Callable interface
+Callable<V> interface use karte hai jab thread se return value chahiye ya checked exception throw karni ho (Runnable ka run() kuch return nahi karta aur checked exception throw nahi kar sakta).
+Callable ka call() method value return karta hai, jo Future object ke through mila jata hai. Ye ExecutorService ke saath use hota hai.
+4.Using Anonymous class or Lambda expression (Runnable ka syntactic variant)
+
+A extend b , Thread wrong
+A extend b implement Runnable correct
+
+
+Thread Lifecycle in Java
+Java mein thread apne life mein 6 states se guzarta hai (Thread.State enum define karta hai ye states):
+1. NEW
+Thread object create ho gaya hai (new Thread()), lekin abhi .start() call nahi hua. Is state mein thread ka koi actual OS-level thread nahi bana hota, sirf Java object exist karta hai.
+2. RUNNABLE
+.start() call hote hi thread NEW se RUNNABLE state mein aata hai. Is state ka matlab hai thread execute hone ke liye ready hai ya actually execute ho raha hai — Java in dono situations (ready + running) ko ek hi RUNNABLE state maanta hai (kyunki actual CPU allotment OS scheduler decide karta hai, JVM ke control mein nahi hai).But acutal me running state bol dete hai
+3. BLOCKED
+Thread kisi monitor lock (synchronized block/method) ka wait kar raha hai jo kisi doosre thread ke paas hai. Jab tak wo lock free nahi hota, thread BLOCKED state mein rehta hai. Lock milte hi RUNNABLE mein wapas chala jata hai.
+4. WAITING
+Thread indefinitely wait kar raha hai kisi doosre thread ke specific action ka (jaise notify() call hona, ya thread ka finish hona). Ye state khud se timeout nahi hota — koi external signal chahiye wapas RUNNABLE hone ke liye.
+Ye state milta hai methods jaise: wait() (bina timeout), join() (bina timeout), park() se.
+5. TIMED_WAITING
+Same as WAITING, but ek fixed time ke liye wait karta hai — time khatam hote hi khud RUNNABLE mein wapas aa jata hai (chahe signal mile ya na mile).
+Ye state milta hai methods jaise: sleep(time), wait(timeout), join(timeout) se.
+6. TERMINATED (Dead)
+Thread ka run() method complete ho gaya (normally ya kisi exception ki wajah se). Ek baar TERMINATED hone ke baad thread dobara start nahi ho sakta — dobara .start() call karne pe IllegalThreadStateException aata hai.
+
