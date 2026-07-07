@@ -22,6 +22,6 @@ Alag memory, safe
 Communication costly (IPC use karna padta hai)
 
 Multithreading
-Sirf ek process hota hai, uske andar multiple threads (Main Thread, Worker Thread, DB Thread, Logger Thread). Ye sab Heap, Objects, Static variables share karte hai, lekin har thread ka apna Stack hota hai. Isi sharing ki wajah se race condition hoti hai.
+Sirf ek process hota hai, uske andar multiple threads (Basic_ThreadClass.Main Thread, Worker Thread, DB Thread, Logger Thread). Ye sab Heap, Objects, Static variables share karte hai, lekin har thread ka apna Stack hota hai. Isi sharing ki wajah se race condition hoti hai.
  Same memory share, fast communication
  Synchronization aur race condition ka risk

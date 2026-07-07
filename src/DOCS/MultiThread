@@ -9,7 +9,7 @@ Thread lifeCycle management: JVM thread lifecycle ko manage karta hai (New, Runn
 
 timeslicing and context switching in single core
 
-Default Thread is Main Thread. Jab tu Java program run karta hai, JVM automatically ek main thread create karta hai jo main() method ko execute karta hai. Agar tu new threads create karta hai, to wo main thread ke alawa execute honge.
+Default Thread is Basic_ThreadClass.Main Thread. Jab tu Java program run karta hai, JVM automatically ek main thread create karta hai jo main() method ko execute karta hai. Agar tu new threads create karta hai, to wo main thread ke alawa execute honge.
 
 Ways to Create a New Thread in Java
 
