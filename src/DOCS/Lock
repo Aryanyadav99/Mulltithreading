@@ -1,0 +1,37 @@
+We already use sync to handle race condition but it auto lock the object and thread will wait for the lock to be released and it cause the infinite waiting time if our method got stuck.
+But if we use Lock interface then we can have more control over the lock. We can try to acquire the lock, we can check if the lock is available or not, we can interrupt a thread waiting for a lock, we can have multiple conditions for a single lock, etc.
+
+
+Intrinsic lock: har Java object ke paas built-in hota hai, synchronized keyword isi ko use karta hai. Automatic — JVM khud acquire/release karta hai.
+Explicit lock: Lock interface ke through manual control milta hai (e.g. ReentrantLock). Developer khud lock() aur unlock() call karta hai.
+
+Problem with synchronized (Bank Account Example)
+Agar ek thread resource hold kar ke stuck ho jaaye (e.g. infinite loop, external call hang), doosra thread indefinitely wait karega — koi timeout nahi hai. Ye poore application ko freeze kar sakta hai.
+
+ReentrantLock class jo extend karit hai lock interface ko — Solution
+Explicit lock class jo flexibility deta hai:
+
+tryLock() → Lock turant lene ki koshish karta hai, agar available nahi hai to turant false return karta hai. Wait nahi karta.
+tryLock(time, unit) → Given time tak wait karta hai lock ke liye, us duration ke baad bhi na mile to false return karta hai. Indefinite blocking rokta hai.
+unlock() → Hamesha finally block mein call karna chahiye, taaki exception aane par bhi lock release ho jaaye aur resource leak na ho.
+Pattern:
+javalock.lock();
+try {
+    // critical section
+} finally {
+    lock.unlock();
+}
+
+5. Reentrancy
+"Reentrant" naam isliye hai kyunki jo thread already lock hold kar raha hai, wahi thread same lock ko dobara acquire kar sakta hai (e.g. nested method calls mein) — bina deadlock hue. Lock ek internal hold count maintain karta hai:
+
+Har lock() call se count +1
+Har unlock() call se count -1
+Jab count 0 ho jaata hai tabhi lock fully release hota hai
+
+6. Deadlocks
+Agar reentrancy na hoti, to same thread agar dobara same lock lene ki koshish karta (e.g. nested call mein), to khud apne aap ko block kar leta — ye ek deadlock scenario hota. Reentrant nature isse avoid karta hai.
+
+ex thread A -> lock lagaya try call innerfun -> in that innerfun again try to aquire lock though lock.lock() kyoki dusre direct false return kar dete hai ye hi unlock ka wait karta hai .. but lock is already locked so it create deadlock...
+
+
