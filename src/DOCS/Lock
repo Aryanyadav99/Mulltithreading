@@ -34,4 +34,16 @@ Agar reentrancy na hoti, to same thread agar dobara same lock lene ki koshish ka
 
 ex thread A -> lock lagaya try call innerfun -> in that innerfun again try to aquire lock though lock.lock() kyoki dusre direct false return kar dete hai ye hi unlock ka wait karta hai .. but lock is already locked so it create deadlock...
 
+ReentrantLock banate waqt tum ek boolean fair parameter de sakte ho — ye decide karta hai ki jab multiple threads lock ka wait kar rahe hon, to lock kisko milega pehle.
 
+Fairness :>
+agar fairness nhi hogi to random lock milega let say 3  thread hai 1,2,3 1and 2 ko randomly lock mil rha hai 3 to starvation me chala gya
+thats why agar tum fairness ko true kar doge to lock hamesha pehle wait kar rahe thread ko milega, isse starvation ka problem solve ho jata hai.
+
+
+
+Sync disadvantages:
+1. Thread ko wait karna padta hai jab lock available nahi hota — indefinite wait
+2. No timeout mechanism — agar thread lock hold kar ke stuck ho jaaye to doosra thread indefinitely wait karega
+3. No flexibility — cannot interrupt a waiting thread, cannot have multiple conditions for a single lock, cannot try to acquire lock without waiting, etc.
+4. No fairness — lock randomly assigned to waiting threads, leading to starvation of some threads

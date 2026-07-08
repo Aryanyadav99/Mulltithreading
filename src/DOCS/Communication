@@ -1,0 +1,26 @@
+Thread Communication
+Why Thread Communication?
+
+When multiple threads depend on each other, continuously checking a condition (busy waiting/polling) wastes CPU.
+
+Example:
+
+Producer creates data.
+Consumer needs that data.
+Instead of checking repeatedly, the consumer waits and the producer notifies when the data is ready.
+
+Purpose: Efficient coordination between threads without wasting CPU.
+
+    wait()
+    Puts the current thread into the WAITING state.
+    Releases the object's monitor lock so other threads can enter the synchronized block.
+    The thread remains waiting until another thread calls notify() or notifyAll().
+    Must be called inside a synchronized block/method.
+    notify()
+    Wakes up one waiting thread (chosen by the JVM).
+    Does NOT release the lock immediately.
+    The awakened thread can continue only after the current thread exits the synchronized block and releases the lock.
+    notifyAll()
+    Wakes up all waiting threads.
+    All awakened threads compete for the same lock.
+    Only one thread acquires the lock first; others wait again until the lock becomes available.
