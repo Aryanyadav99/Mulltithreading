@@ -1,0 +1,58 @@
+Thread Safety kya hoti hai?
+
+Definition
+A class or code is Thread Safe if multiple threads can access it simultaneously without producing incorrect or inconsistent results.(without entering into race conditions or data corruption)
+Achieved using:
+
+synchronized
+ReentrantLock
+Atomic Classes (AtomicInteger)
+Immutable Objects (String)
+
+Thread Pool
+A collection of pre-created worker threads used to execute tasks.
+Threads are reused instead of creating a new thread for every task.
+Reduces thread creation overhead and improves performance.
+Tasks wait in a queue if all threads are busy.
+Commonly implemented using Executor Framework (ExecutorService).
+Used internally by Spring Boot/Tomcat to handle multiple HTTP requests efficiently.
+
+this thread pool is used in ExecutorService notes is in github link
+https://github.com/adityatandon15/Java-Full-Course/blob/main/Lecture%2056/notes.pdf
+
+just learn exectuor service ,threadpool, future,callable from it
+
+
+Imp thing
+AtomicInteger Class and Volatile Keyword
+
+volatile – Visibility
+Problem: Different CPU cores may cache variables, so one thread's update may not be immediately visible to others.
+
+Solution: volatile forces reads/writes to go through main memory, ensuring all threads see the latest value.
+
+Use when:
+Simple flags (isRunning, shutdown)
+Direct assignment (flag = true)
+No read-modify-write operation
+ Does NOT provide atomicity.
+
+Example:
+volatile boolean running = true;
+
+
+AtomicInteger – Atomicity
+
+Problem:count++ is Read → Modify → Write, so multiple threads can overwrite each other's updates (race condition).
+Solution: AtomicInteger uses CAS (Compare-And-Swap) to make operations atomic without using locks.
+
+Common Methods:
+incrementAndGet()
+decrementAndGet()
+getAndIncrement()
+compareAndSet(expected, newValue)
+
+Example:
+
+AtomicInteger count = new AtomicInteger(0);
+count.incrementAndGet()  instead of count++ with sync because sync have many problems like deadlock, starvation, etc. so we use atomic classes to avoid these problems.;
